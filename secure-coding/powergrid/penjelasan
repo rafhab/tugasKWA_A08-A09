@@ -1,0 +1,87 @@
+## **Analisis Detail:**
+
+1. **Jenis Challenge**: Web Application Security / Secure Coding  
+2. **Lingkungan**: IDE berbasis web dengan editor kode, penyorotan sintaks, penyimpanan otomatis, dan alat pengujian terintegrasi  
+3. **Target**: Kode JavaScript yang mengandung kerentanan keamanan  
+4. **Tujuan**:  
+   - Identifikasi kerentanan dalam kode JS  
+   - Pahami vektor serangan melalui contoh kode eksploit  
+   - Terapkan perbaikan keamanan  
+   - Test perbaikan secara real-time
+
+---
+
+## **Langkah-langkah Umum Penyelesaian:**
+
+### **Tahap 1: Analisis Kode**
+- Baca seluruh kode JS yang diberikan
+- Identifikasi pola berbahaya:
+  - **Injection** (SQL, NoSQL, Command)
+  - **XSS** (Cross-Site Scripting)
+  - **Prototype Pollution**
+  - **Insecure Deserialization**
+  - **Authentication/Authorization flaws**
+  - **CORS misconfiguration**
+  - **Sensitive data exposure**
+
+### **Tahap 2: Memahami Eksploit**
+- Pelajari contoh kode eksploitasi yang disediakan
+- Pahami bagaimana kerentanan bisa dimanfaatkan
+- Test eksploit di lingkungan yang aman (dalam IDE)
+
+### **Tahap 3: Implementasi Perbaikan**
+- Terapkan patch/secure coding practices
+- Teknik umum:
+  - **Input validation & sanitization**
+  - **Output encoding**
+  - **Parameterized queries** (untuk database)
+  - **Proper authentication checks**
+  - **Content Security Policy (CSP)**
+  - **Safe object property access**
+
+### **Tahap 4: Testing**
+- Gunakan alat pengujian terintegrasi di IDE
+- Verifikasi bahwa eksploitasi tidak lagi bekerja
+- Pastikan fungsionalitas normal tetap berjalan
+
+---
+
+## **Contoh Kerentanan JS Umum di CTF:**
+
+```javascript
+// Contoh kerentanan: XSS
+app.get('/search', (req, res) => {
+    const query = req.query.q;
+    // Vulnerable: langsung render user input
+    res.send(`<h1>Results for: ${query}</h1>`);
+});
+
+// Perbaikan:
+app.get('/search', (req, res) => {
+    const query = req.query.q;
+    // Safe: escape output
+    res.send(`<h1>Results for: ${escapeHtml(query)}</h1>`);
+});
+```
+
+```javascript
+// Contoh: Prototype Pollution
+function mergeObjects(target, source) {
+    for (let key in source) {
+        target[key] = source[key]; // Vulnerable to prototype pollution
+    }
+    return target;
+}
+
+// Perbaikan:
+function mergeObjectsSafe(target, source) {
+    for (let key in source) {
+        if (source.hasOwnProperty(key)) {
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
+```
+
+---
